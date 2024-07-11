@@ -42,8 +42,6 @@ public class FPSCounter : MonoBehaviour
 
             if (MaxLabel != null)
                 MaxLabel.text = $"Max: {max}";
-
-
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.ProBuilder.Shapes;
 using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
@@ -20,18 +22,23 @@ public class PlayerController : MonoBehaviour
     private int Gravity = 50;
 
     [SerializeField]
-    [Range(0, 10)]
-    private int Life = 1;
+    private GameObject capsule;
+
+    public static int Life = 3;
 
     private bool canWalk;
+    private bool canLoseLife = true;
 
     public static Action OnPlayerDied;
+    public static Action OnLoseLife;
 
     private async void Start()
     {
+        Life = 3;
         canWalk = false;
         await Task.Delay(3000);
         canWalk = true;
+
     }
 
     private void Update()
@@ -52,18 +59,21 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Enemy"))
+        if (other.tag.Equals("Enemy") && canLoseLife)
         {
             if(Life > 1)
             {
                 Life--;
                 Debug.Log($"Current Life is: {Life}");
+                SetupDamage();
             }
             else
             {
+                Life--;
                 OnPlayerDied?.Invoke();
                 Debug.Log($"Player Died");
             }
+            OnLoseLife?.Invoke();
         }
     }
 
@@ -90,5 +100,14 @@ public class PlayerController : MonoBehaviour
         var z = Speed * speedFactor * vertical * Time.deltaTime;
 
         return new Vector3(x, y, z);
+    }
+
+    private async void SetupDamage()
+    {
+        canLoseLife = false;
+        capsule.SetActive(true);
+        await Task.Delay(3000);
+        canLoseLife = true;
+        capsule.SetActive(false);
     }
 }

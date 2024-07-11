@@ -224,7 +224,7 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 23714854140605598}
-  - screenRelativeHeight: 0.01
+  - screenRelativeHeight: 0.003700188
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 23996637793532338}
@@ -242,8 +242,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LODGroupComponent: {fileID: 0}
-  MinFPS: 120
   WarningLimit: 0.2
+  UpdateTimeInSeconds: 1
 --- !u!1 &1812532350169460
 GameObject:
   m_ObjectHideFlags: 0

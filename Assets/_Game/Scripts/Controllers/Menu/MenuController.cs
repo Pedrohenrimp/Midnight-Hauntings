@@ -12,18 +12,28 @@ public class MenuController : MonoBehaviour
     [SerializeField]
     private Button SettingsButton;
 
+    [SerializeField]
+    private Button QuitButton;
+
     private void OnEnable()
     {
         PlayButton.onClick.AddListener(OnPlayButtonClicked);
+        QuitButton.onClick.AddListener(OnQuitButtonClicked);
     }
 
     private void OnDisable()
     {
         PlayButton.onClick.RemoveListener(OnPlayButtonClicked);
+        QuitButton.onClick.RemoveListener(OnQuitButtonClicked);
     }
 
     public void OnPlayButtonClicked()
     {
-        SceneManager.LoadScene("Phase1");
+        SceneManager.LoadScene("Phase2");
+    }
+
+    public void OnQuitButtonClicked()
+    {
+        Application.Quit();
     }
 }

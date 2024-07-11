@@ -42,11 +42,13 @@ public class PauseController : MonoBehaviour
 
     private void OnResumeButtonClicked()
     {
+        Time.timeScale = 1;
         SetupBaseFPS();
     }
 
     private void OnGoToMenuButtonClicked()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("Main");
     }
 

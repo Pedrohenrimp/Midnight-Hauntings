@@ -1,12 +1,9 @@
 using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameMenuController : MonoBehaviour
@@ -33,8 +30,23 @@ public class GameMenuController : MonoBehaviour
     private GameObject collectibleComponent;
 
     [SerializeField]
+    private GameObject gameOverObject;
+
+    [SerializeField]
+    private GameObject winObject;
+
+    [SerializeField]
+    private GameObject timeComponent;
+
+    [SerializeField]
+    private GameObject player;
+
+    [SerializeField]
     [Range(1, 10)]
     private int totalCollectibles = 10;
+
+    [SerializeField]
+    private List<GameObject> lifeContainers;
 
     private int collectedItems = 0;
 
@@ -54,7 +66,11 @@ public class GameMenuController : MonoBehaviour
         SetupTime();
 
         PlayerController.OnPlayerDied += OnPlayerDiedCallback;
+        PlayerController.OnLoseLife += SetupLife;
         CollectibleControler.OnCollected += OnItemCollectedCallback;
+        DungeonController.OnPlayerEntered += OnPlayerWinCallback;
+
+        OnTimeEnded += OnPlayerDiedCallback;
     }
 
     private void OnDisable()
@@ -62,11 +78,16 @@ public class GameMenuController : MonoBehaviour
         pauseButton.onClick.RemoveListener(OnPauseButtonClicked);
 
         PlayerController.OnPlayerDied -= OnPlayerDiedCallback;
-        CollectibleControler.OnCollected += OnItemCollectedCallback;
+        PlayerController.OnLoseLife -= SetupLife;
+        CollectibleControler.OnCollected -= OnItemCollectedCallback;
+        DungeonController.OnPlayerEntered -= OnPlayerWinCallback;
+
+        OnTimeEnded -= OnPlayerDiedCallback;
     }
 
     public void OnPauseButtonClicked()
     {
+        Time.timeScale = 0;
     }
 
     private async void SetupPhaseComponent()
@@ -87,7 +108,16 @@ public class GameMenuController : MonoBehaviour
 
     private void OnPlayerDiedCallback()
     {
+        gameOverObject.SetActive(true);
+        timeComponent.SetActive(false);
+        player.SetActive(false);
+    }
 
+    private void OnPlayerWinCallback()
+    {
+        winObject.SetActive(true);
+        timeComponent.SetActive(false);
+        player.SetActive(false);
     }
 
     private void OnItemCollectedCallback()
@@ -95,6 +125,12 @@ public class GameMenuController : MonoBehaviour
         collectedItems++;
         collectibleItemLabel.text = $"{collectedItems}/{totalCollectibles}";
         collectibleComponent.transform.DOShakeScale(0.3f, 0.2f, 1);
+
+        if(collectedItems == totalCollectibles)
+        {
+            collectibleItemLabel.color = Color.green;
+            CauldronController.OnConllectedAllItems?.Invoke();
+        }
     }
 
     private void SetupTime()
@@ -156,11 +192,26 @@ public class GameMenuController : MonoBehaviour
 
     private async void SetupTextColor()
     {
-        if (remainingTime <= 55)
+        if (remainingTime <= 15)
         {
             timeLabel.DOColor(new Color(1f, 0.5f, 0.5f), 0.3f);
             await Task.Delay(500);
             timeLabel.DOColor(Color.white, 0.5f);
+        }
+    }
+
+    private void SetupLife()
+    {
+        for (int i = 0; i < lifeContainers.Count; i++)
+        {
+            if(i < PlayerController.Life)
+            {
+                lifeContainers[i].SetActive(true);
+            }
+            else
+            {
+                lifeContainers[i].SetActive(false);
+            }
         }
     }
 }

@@ -97,9 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75dfcd3cdfccc0d45ad2f2ae6484b6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LODGroupComponent: {fileID: 0}
-  MinFPS: 120
+  LODGroupComponent: {fileID: 205194503987568770}
   WarningLimit: 0.2
+  UpdateTimeInSeconds: 1
 --- !u!1 &1283923351219466
 GameObject:
   m_ObjectHideFlags: 0

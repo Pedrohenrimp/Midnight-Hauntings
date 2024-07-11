@@ -19,6 +19,7 @@ public class GateController : MonoBehaviour
             {
                 GateAnimator.Play("close_gate");
                 gateIsOpenned = false;
+                Debug.Log("The Gate is Closed.");
             }
         }
     }
